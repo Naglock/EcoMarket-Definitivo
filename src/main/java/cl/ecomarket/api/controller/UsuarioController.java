@@ -58,9 +58,7 @@ public class UsuarioController {
             if (usuario.getCorreo() != null) {
                 user.setCorreo(usuario.getCorreo());
             }
-            if (usuario.getDireccion() != null) {
-                user.setDireccion(usuario.getDireccion());
-            }
+            user.setDireccion(usuario.getDireccion());
             usuarioService.guardarUsuario(user);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
@@ -68,7 +66,7 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
         try {
             usuarioService.borrarUsuario(id);
