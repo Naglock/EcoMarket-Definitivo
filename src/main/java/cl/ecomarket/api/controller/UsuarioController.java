@@ -75,4 +75,5 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }
