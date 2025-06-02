@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import cl.ecomarket.api.model.Producto;
 import cl.ecomarket.api.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class ProductoService {
 
     @Autowired
@@ -22,32 +24,13 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public Optional<Producto> obtenerPorId(int id) {
-        return productoRepository.findById(id);
+    public Producto obtenerPorId(Long id) {
+        return productoRepository.findById(id).get();
     }
 
-    public Optional<Producto> actualizarProducto(int id, Producto nuevoProducto) {
-        return productoRepository.findById(id).map(producto -> {
-            producto.setNombre(nuevoProducto.getNombre());
-            producto.setDescripcion(nuevoProducto.getDescripcion());
-            producto.setStock(nuevoProducto.getStock());
-            producto.setPrecio(nuevoProducto.getPrecio());
-            return productoRepository.save(producto);
-        });
+    public void eliminarProducto(Long id) {
+        productoRepository.deleteById(id);
     }
 
-    public boolean eliminarProducto(int id) {
-        if (productoRepository.existsById(id)) {
-            productoRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
 
-    public Optional<Producto> actualizarStock(int id, int cantidad) {
-        return productoRepository.findById(id).map(producto -> {
-            producto.setStock(producto.getStock() + cantidad);
-            return productoRepository.save(producto);
-        });
-    }
 }

@@ -1,4 +1,4 @@
-package cl.ecomarket.api.service;
+package cl.ecomarket.api.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import cl.ecomarket.api.model.Tienda;
 import cl.ecomarket.api.repository.TiendaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class TiendaService {
 
     @Autowired
@@ -19,8 +21,8 @@ public class TiendaService {
         return tiendaRepository.findAll();
     }
 
-    public Optional<Tienda> obtenerTiendaPorId(Long id) {
-        return tiendaRepository.findById(id);
+    public Tienda obtenerTiendaPorId(Long id) {
+        return tiendaRepository.findById(id).get();
     }
 
     public Tienda guardarTienda(Tienda tienda) {
@@ -31,9 +33,9 @@ public class TiendaService {
         tiendaRepository.deleteById(id);
     }
 
-    public List<Tienda> buscarPorDiaSemana(String diaSemana) {
+/*     public List<Tienda> buscarPorDiaSemana(String diaSemana) {
         return tiendaRepository.findAll().stream()
                 .filter(tienda -> tienda.getDiaSemana().equalsIgnoreCase(diaSemana))
                 .toList();
-    }
+    } */
 }

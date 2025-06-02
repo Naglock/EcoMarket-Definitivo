@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.ecomarket.api.model.Tienda;
-import cl.ecomarket.api.service.TiendaService;
+import cl.ecomarket.api.services.TiendaService;
 @RestController
 @RequestMapping("/api/v1/tiendas")
 public class TiendaController {
@@ -26,9 +26,12 @@ public class TiendaController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Tienda> obtenerTiendaPorId(@PathVariable Long id) {
-        return tiendaService.obtenerTiendaPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            Tienda tienda = tiendaService.obtenerTiendaPorId(id);
+            return ResponseEntity.ok(tienda);
+        } catch(Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

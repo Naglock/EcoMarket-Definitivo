@@ -1,21 +1,20 @@
 package cl.ecomarket.api.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import jakarta.persistence.*;
+import lombok.Data;
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class ItemPedido {
+public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int cantidad;
+    private Integer stock;
     @ManyToOne
     @JoinColumn(name = "producto_id")
     private Producto producto;
+    @ManyToOne
+    @JoinColumn(name = "tienda_id")
+    private Tienda tienda;
 
 }

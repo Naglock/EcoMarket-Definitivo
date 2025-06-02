@@ -1,4 +1,4 @@
-package cl.ecomarket.api.service;
+package cl.ecomarket.api.services;
 
 import java.util.List;
 

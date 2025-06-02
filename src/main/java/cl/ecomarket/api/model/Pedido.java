@@ -1,5 +1,7 @@
 package cl.ecomarket.api.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +18,11 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name="cliente_id")
     private Usuario cliente;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="detalle_id")
-    private DetallePedido detalle;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "pedido_id")
+    private List<ItemPedido> items;
+    @ManyToOne
+    @JoinColumn(name="tienda_id")
+    private Tienda tienda;
 
 }

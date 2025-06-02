@@ -1,6 +1,8 @@
 package cl.ecomarket.api.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -15,10 +17,10 @@ import lombok.NoArgsConstructor;
 
 public class Producto {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String nombre;
     private String descripcion;
-    private int stock;
     private double precio;
 
 }
