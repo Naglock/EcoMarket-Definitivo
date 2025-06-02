@@ -29,9 +29,9 @@ public class InventarioController {
     public ResponseEntity<List<Inventario>> listarTodos(){
         List<Inventario> inventarios = inventarioService.listarTodos();
         if (inventarios.isEmpty()){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // Si la lista es vacia, da un estado de noContent()
         }
-        return ResponseEntity.ok(inventarios);
+        return ResponseEntity.ok(inventarios); // Si hay items da un ok
     }
 
     @GetMapping("/tienda/{TiendaId}")
@@ -44,9 +44,9 @@ public class InventarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Inventario> guardarInventario(@RequestBody Inventario inventario) {
-        Producto producto = productoService.obtenerPorId(inventario.getProducto().getId());
-        Tienda tienda = tiendaService.obtenerTiendaPorId(inventario.getTienda().getId());
+    public ResponseEntity<Inventario> guardarInventario(@RequestBody Inventario inventario) { // Hay que hacer que arroje un error cuando el id producto
+        Producto producto = productoService.obtenerPorId(inventario.getProducto().getId());   // no existe en la tabla Productos (notFound)
+        Tienda tienda = tiendaService.obtenerTiendaPorId(inventario.getTienda().getId());     // Lo mismo para la tienda (notFound)  (pendiente)
         inventario.setProducto(producto);
         inventario.setTienda(tienda);
         Inventario nuevoInventario = inventarioService.guardarInventario(inventario);
@@ -67,14 +67,14 @@ public class InventarioController {
                     inventarioService.guardarInventario(inv); //Si se cumple bien la condicion, se le resta el stock solicitado al actual y luego se actualiza su repositorio
                     return ResponseEntity.ok(inv);
                 } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST) // Bad Request si el valor que restara al stock lo excede.
                             .body(null);
                 }                
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Bad Request si el parametro de operacion no es agregar/quitar.
             }             
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Cambiar este error por un notFound   (pendiente)
         }            
     }
 

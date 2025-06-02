@@ -62,7 +62,7 @@ public class UsuarioController {
             usuarioService.guardarUsuario(user);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build(); // si usuario no existe, da error notFound
         }
     }
 

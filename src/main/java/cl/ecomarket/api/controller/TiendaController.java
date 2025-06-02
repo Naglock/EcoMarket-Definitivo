@@ -22,8 +22,8 @@ public class TiendaController {
 
     @GetMapping
     public ResponseEntity<List<Tienda>> obtenerTodasLasTiendas() {
-        return ResponseEntity.ok(tiendaService.obtenerTodasLasTiendas());
-    }
+        return ResponseEntity.ok(tiendaService.obtenerTodasLasTiendas()); // Hay que cambiar la respuesta entregada
+    }                                                                     // cuando este vacio, debe decir NoContent (pendiente)
     @GetMapping("/{id}")
     public ResponseEntity<Tienda> obtenerTiendaPorId(@PathVariable Long id) {
         try {

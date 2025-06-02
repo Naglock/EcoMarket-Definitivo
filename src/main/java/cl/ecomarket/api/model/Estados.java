@@ -6,5 +6,4 @@ public enum Estados {
     EN_PREPARACION,
     EN_CAMINO,
     ENTREGADO,
-
 }

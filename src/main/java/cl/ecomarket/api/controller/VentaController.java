@@ -36,7 +36,7 @@ public class VentaController {
         venta.setEstado(estado); // Coloca el estado de la venta como APROBADA/RECHAZADA. Cualquier otra da error.
         venta.setPedido(pedidoService.encontrarPorId(venta.getPedido().getId())); // A partir de "pedido": {"id":Long} se obtiene el pedido que si existe en el repository
         venta.setTienda(tiendaService.obtenerTiendaPorId(venta.getPedido().getTienda().getId())); // y con este mismo pedido se obtiene la tienda del repository
-        Double total = 0.0;
+        Double total = 0.0;                                                                       // Hacer errores tipo not Found para ambos set (Pedido y Tienda) (PENDIENTE)
         if (estado == Estados.APROBADA){
             for (ItemPedido item : venta.getPedido().getItems()){
                 Double Subtotal = 0.0;
@@ -92,13 +92,6 @@ public class VentaController {
         return factura != null ? ResponseEntity.ok(factura) : ResponseEntity.notFound().build();
     }
 
-/*     @PutMapping("/devolucion/{id}")
-    public ResponseEntity<String> cancelarVenta(@PathVariable Integer id) {  // revisar como cambiar devolucion
-        boolean devuelta = ventaService.marcarComoDevuelta(id);
-        return devuelta ? ResponseEntity.ok("Devolucion hecho correctamente") :
-                        ResponseEntity.notFound().build();
-    }
- */
     @DeleteMapping("eliminar/{id}")
     public ResponseEntity<Void> eliminarVenta(@PathVariable Long id) {
         ventaService.eliminarVenta(id);
