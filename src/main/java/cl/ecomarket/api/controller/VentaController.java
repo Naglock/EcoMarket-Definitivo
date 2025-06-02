@@ -72,7 +72,7 @@ public class VentaController {
 
     @GetMapping
     public List<Venta> obtenerTodas() {
-        return ventaService.obtenerTodas();
+        return ventaService.obtenerTodas(); //agregar status notContent cuando no tenga contenido (PENDIENTE)
     }
 
     @GetMapping("/{id}")

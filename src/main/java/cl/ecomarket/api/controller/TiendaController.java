@@ -27,7 +27,7 @@ public class TiendaController {
     @GetMapping("/{id}")
     public ResponseEntity<Tienda> obtenerTiendaPorId(@PathVariable Long id) {
         try {
-            Tienda tienda = tiendaService.obtenerTiendaPorId(id);
+            Tienda tienda = tiendaService.obtenerTiendaPorId(id); 
             return ResponseEntity.ok(tienda);
         } catch(Exception e) {
             return ResponseEntity.notFound().build();
@@ -36,7 +36,7 @@ public class TiendaController {
 
     @PostMapping
     public ResponseEntity<Tienda> crearTienda(@RequestBody Tienda tienda) {
-        return ResponseEntity.ok(tiendaService.guardarTienda(tienda));
+        return ResponseEntity.ok(tiendaService.guardarTienda(tienda)); // Que genere un status CREATED().body(tienda) (pendiente)
     }
 
     @DeleteMapping("/{id}")

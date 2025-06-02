@@ -19,8 +19,8 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
+    private String nombre; // agregar @Column (nullable = false) en todos (pendiente)
     private String descripcion;
-    private double precio;
+    private double precio; // int debido a que en chile no hay decimal para valores
 
 }

@@ -36,7 +36,7 @@ public class InventarioController {
 
     @GetMapping("/tienda/{TiendaId}")
     public ResponseEntity<List<Inventario>> listarPorIdTienda(@PathVariable Long TiendaId) {
-        List<Inventario> inventario = inventarioService.listarInventarioPorTiendaId(TiendaId);
+        List<Inventario> inventario = inventarioService.listarInventarioPorTiendaId(TiendaId); // Agregar un error notFound cuando se ingrese una id de tienda que no este en el repositorio (pendiente)
         if (inventario.isEmpty()){
             return ResponseEntity.noContent().build();
         }
@@ -49,10 +49,14 @@ public class InventarioController {
         Tienda tienda = tiendaService.obtenerTiendaPorId(inventario.getTienda().getId());     // Lo mismo para la tienda (notFound)  (pendiente)
         inventario.setProducto(producto);
         inventario.setTienda(tienda);
+/*         if (inventario.getStock()==null){
+            inventario.setStock(0);
+        } */
         Inventario nuevoInventario = inventarioService.guardarInventario(inventario);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoInventario);
     }
 
+    
     @PatchMapping
     public ResponseEntity<Inventario> actualizarStock(@RequestParam Long inventarioId,@RequestParam String operacion, @RequestParam int stock){ // operacion = ["agregar","quitar"]
         try {
