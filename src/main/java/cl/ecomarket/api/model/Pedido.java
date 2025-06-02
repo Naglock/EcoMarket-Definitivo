@@ -15,6 +15,8 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
+    private Estados estado;
     @ManyToOne
     @JoinColumn(name="cliente_id")
     private Usuario cliente;

@@ -67,16 +67,16 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<Pedido> guardarPedido(@RequestBody Pedido pedido) {
         List<ItemPedido> productos = new ArrayList<>();
-        pedido.setCliente(usuarioService.encontrarPorId(pedido.getCliente().getId()));
-        pedido.setTienda(tiendaService.obtenerTiendaPorId(pedido.getTienda().getId()));
+        pedido.setCliente(usuarioService.encontrarPorId(pedido.getCliente().getId())); //Busca el cliente que esta en pedido y lo vincula al que esta en la base de datos
+        pedido.setTienda(tiendaService.obtenerTiendaPorId(pedido.getTienda().getId()));//Busca la tienda que aparece en pedido y la vincula a la de la base de datos
         for (ItemPedido items : pedido.getItems()){
             ItemPedido listado = new ItemPedido();
             listado.setCantidad(items.getCantidad());
-            listado.setProducto(productoService.obtenerPorId(items.getProducto().getId()));
-            if (!inventarioService.hayStock(listado.getProducto().getId(), pedido.getTienda().getId(), listado.getCantidad())){
+            listado.setProducto(productoService.obtenerPorId(items.getProducto().getId())); //Obtiene el producto con el id y lo vincula con el de la base de datos.
+            if (!inventarioService.hayStock(listado.getProducto().getId(), pedido.getTienda().getId(), listado.getCantidad())){ // Revisa si hay stock para el pedido.
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
-            productos.add(listado);            
+            productos.add(listado);           // Si hay stock, agrega el listado ->EJ "Productos":[{"cantidad":10,"producto":{"id":1}},{"cantidad":5,"producto":{"id":2}}]
         }
         pedido.setItems(productos);
         Pedido nuevoPedido = pedidoService.crearPedido(pedido);
