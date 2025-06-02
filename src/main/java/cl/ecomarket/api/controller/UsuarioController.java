@@ -43,11 +43,11 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizar(@PathVariable Long id,@RequestBody Usuario usuario) {
-        try {
+    public ResponseEntity<Usuario> actualizar(@PathVariable Long id,@RequestBody Usuario usuario) { // Usuario puede tener datos de tipo null.
+        try {                                                                                       // En ellos se hace la comparacion != null, si no estan null, se hace un Set.
             Usuario user = usuarioService.encontrarPorId(id);
-            user.setId(id);
-            user.setPnombre(usuario.getPnombre());
+            user.setId(id);                            
+            user.setPnombre(usuario.getPnombre());       
             if (usuario.getSnombre() != null){
                 user.setSnombre(usuario.getSnombre());
             }

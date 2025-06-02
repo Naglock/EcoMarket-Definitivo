@@ -6,13 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import cl.ecomarket.api.model.Estados;
 import cl.ecomarket.api.model.ItemPedido;
 import cl.ecomarket.api.model.Pedido;
 import cl.ecomarket.api.services.InventarioService;
@@ -81,6 +76,22 @@ public class PedidoController {
         pedido.setItems(productos);
         Pedido nuevoPedido = pedidoService.crearPedido(pedido);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPedido);
+    }
+
+
+    @PatchMapping("/cambiar-estado/{idPedido}") 
+    public ResponseEntity<Pedido> cambiarEstado(@PathVariable Long idPedido, @RequestParam Estados estado) { // Funcion para Logistica. Permite Cambiar el estado del pedido
+        try {
+            Pedido pedido = pedidoService.encontrarPorId(idPedido);
+            if (pedido.getEstado() == Estados.RECHAZADA || pedido.getEstado() == null){ // Si esta RECHAZADA, logistica no puede generar ningun cambio en el estado
+                return ResponseEntity.badRequest().build();                             // Si esta null, significa que aun no se ha aprobado por ventas
+            }
+            pedido.setEstado(estado);
+            pedidoService.crearPedido(pedido);
+            return ResponseEntity.ok(pedido);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

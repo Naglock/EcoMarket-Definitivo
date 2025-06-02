@@ -58,13 +58,13 @@ public class InventarioController {
         try {
             Inventario inv = inventarioService.encontrarPorId(inventarioId);
             if (operacion.equals("agregar")){
-                inv.setStock(inv.getStock()+stock);
-                inventarioService.guardarInventario(inv);
+                inv.setStock(inv.getStock()+stock);  // Se obtiene el stock actual, y se le suma el stock del @ReqquestParam
+                inventarioService.guardarInventario(inv); // Se actualiza el stock en su repository
                 return ResponseEntity.ok(inv);
             } else if (operacion.equals("quitar")) {
                 if (inv.getStock() >= stock) {
-                    inv.setStock(inv.getStock()-stock);
-                    inventarioService.guardarInventario(inv);
+                    inv.setStock(inv.getStock()-stock); //Si el stock actual es inferior al stock que se quitara, dara un error
+                    inventarioService.guardarInventario(inv); //Si se cumple bien la condicion, se le resta el stock solicitado al actual y luego se actualiza su repositorio
                     return ResponseEntity.ok(inv);
                 } else {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
