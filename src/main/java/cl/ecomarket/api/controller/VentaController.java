@@ -30,19 +30,19 @@ public class VentaController {
     @Autowired
     private InventarioService inventarioService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Venta> registrarVenta(@RequestBody Venta venta,@RequestParam Estados estado) {
         venta.setFecha(LocalDate.now());
         venta.setEstado(estado); // Coloca el estado de la venta como APROBADA/RECHAZADA. Cualquier otra da error.
         venta.setPedido(pedidoService.encontrarPorId(venta.getPedido().getId())); // A partir de "pedido": {"id":Long} se obtiene el pedido que si existe en el repository
         venta.setTienda(tiendaService.obtenerTiendaPorId(venta.getPedido().getTienda().getId())); // y con este mismo pedido se obtiene la tienda del repository
-        Double total = 0.0;                                                                       // Hacer errores tipo not Found para ambos set (Pedido y Tienda) (PENDIENTE)
+        Double total = 0.0;                                                                       // Hacer error de tipo notFound para setPedido (PENDIENTE)
         if (estado == Estados.APROBADA){
             for (ItemPedido item : venta.getPedido().getItems()){
                 Double Subtotal = 0.0;
                 Subtotal += (item.getCantidad() * item.getProducto().getPrecio());
                 Inventario inventario = inventarioService.encontrarPorProductoYTienda(item.getProducto().getId(), venta.getTienda().getId());
-                inventario.setStock(inventario.getStock()-item.getCantidad());
+                inventario.setStock(inventario.getStock()-item.getCantidad()); 
                 inventarioService.guardarInventario(inventario); //actualiza el stock del inventario.
                 total += Subtotal;
             }
