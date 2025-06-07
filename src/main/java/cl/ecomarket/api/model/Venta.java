@@ -24,7 +24,4 @@ public class Venta {
     @OneToOne
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
-    @ManyToOne
-    @JoinColumn(name = "tienda_id")
-    private Tienda tienda;
 }

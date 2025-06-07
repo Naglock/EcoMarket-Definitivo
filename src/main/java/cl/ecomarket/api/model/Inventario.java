@@ -1,6 +1,8 @@
 package cl.ecomarket.api.model;
 
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 @Entity
@@ -10,10 +12,10 @@ public class Inventario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer stock;
-    @ManyToOne
-    @JoinColumn(name = "producto_id")
-    private Producto producto;
-    @ManyToOne
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "producto_inventariado_id")
+    private List<ProductoInventariado> productosInventariados;
+    @OneToOne // Relacion uno a uno con Tienda (corregido).
     @JoinColumn(name = "tienda_id")
     private Tienda tienda;
 

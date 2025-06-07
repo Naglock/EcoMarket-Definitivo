@@ -23,7 +23,7 @@ public class Pedido {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "pedido_id")
     private List<ItemPedido> items;
-    @ManyToOne
+    @OneToOne // Relacion uno a uno con Tienda (corregido).
     @JoinColumn(name="tienda_id")
     private Tienda tienda;
 

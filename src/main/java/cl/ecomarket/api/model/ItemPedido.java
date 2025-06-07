@@ -14,7 +14,7 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int cantidad;
-    @ManyToOne
+    @OneToOne // Relacion uno a uno con Producto (corregido)
     @JoinColumn(name = "producto_id")
     private Producto producto;
 

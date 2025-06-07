@@ -32,7 +32,7 @@ public class VentaController {
 
     @PostMapping
     public ResponseEntity<Venta> registrarVenta(@RequestBody Venta venta,@RequestParam Estados estado) {
-        venta.setFecha(LocalDate.now());
+        venta.setFecha(LocalDate.now()); // Cambiar el LocalDate para que agregue tambien la hora (pendiente)
         venta.setEstado(estado); // Coloca el estado de la venta como APROBADA/RECHAZADA. Cualquier otra da error.
         venta.setPedido(pedidoService.encontrarPorId(venta.getPedido().getId())); // A partir de "pedido": {"id":Long} se obtiene el pedido que si existe en el repository
         venta.setTienda(tiendaService.obtenerTiendaPorId(venta.getPedido().getTienda().getId())); // y con este mismo pedido se obtiene la tienda del repository
