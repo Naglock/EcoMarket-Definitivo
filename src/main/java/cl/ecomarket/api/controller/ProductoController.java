@@ -46,16 +46,13 @@ public class ProductoController {
     @PatchMapping
     public ResponseEntity<Producto> actualizarPrecio(@RequestParam Long ProductoId,@RequestParam double Precio) {
         try {
-            Producto producto = productoService.obtenerPorId(ProductoId);
-            if (Precio<=0){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            } else {
-                producto.setPrecio(Precio);
-                productoService.agregarProducto(producto);
-                return ResponseEntity.ok(producto);
-            }
+            Producto productoActualizado = productoService.actualizaPrecio(ProductoId, Precio);
+            return ResponseEntity.ok(productoActualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
+            
         }
     }
 
