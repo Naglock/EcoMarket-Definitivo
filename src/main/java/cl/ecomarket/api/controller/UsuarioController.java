@@ -28,8 +28,12 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> guardar(@RequestBody Usuario usuario) {
-        Usuario usuarioNuevo = usuarioService.guardarUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioNuevo);
+        try {
+            Usuario nuevoUsuario = usuarioService.guardarUsuario(usuario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario); // Retorna 201 Created
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build(); // Retorna 400 Bad Request si hay un error
+        }
     }
 
     @GetMapping("/{id}")
@@ -45,24 +49,27 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizar(@PathVariable Long id,@RequestBody Usuario usuario) { // Usuario puede tener datos de tipo null.
         try {                                                                                       // En ellos se hace la comparacion != null, si no estan null, se hace un Set.
-            Usuario user = usuarioService.encontrarPorId(id);
-            user.setId(id);                            
-            user.setPnombre(usuario.getPnombre());       
-            if (usuario.getSnombre() != null){
-                user.setSnombre(usuario.getSnombre());
+            Usuario usuarioExistente = usuarioService.encontrarPorId(id);
+            if (usuario.getSnombre() != null) {
+                usuarioExistente.setSnombre(usuario.getSnombre());
             }
-            user.setAppaterno(usuario.getAppaterno());
-            if (usuario.getApmaterno() != null) {
-                user.setApmaterno(usuario.getApmaterno());
-            }            
             if (usuario.getCorreo() != null) {
-                user.setCorreo(usuario.getCorreo());
+                usuarioExistente.setCorreo(usuario.getCorreo());
             }
-            user.setDireccion(usuario.getDireccion());
-            usuarioService.guardarUsuario(user);
-            return ResponseEntity.ok(user);
+            if (usuario.getApmaterno() != null) {
+                usuarioExistente.setApmaterno(usuario.getApmaterno());
+            }
+            usuarioExistente.setPnombre(usuario.getPnombre());
+            usuarioExistente.setAppaterno(usuario.getAppaterno());
+            usuarioExistente.setDireccion(usuario.getDireccion());
+            try {
+                Usuario actualizado = usuarioService.guardarUsuario(usuarioExistente);
+                return ResponseEntity.ok(actualizado);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Retorna 400 Bad Request
+            }            
         } catch (Exception e) {
-            return ResponseEntity.notFound().build(); // si usuario no existe, da error notFound
+            return ResponseEntity.notFound().build();
         }
     }
 

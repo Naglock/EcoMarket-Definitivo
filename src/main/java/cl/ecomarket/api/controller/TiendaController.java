@@ -22,8 +22,16 @@ public class TiendaController {
 
     @GetMapping
     public ResponseEntity<List<Tienda>> obtenerTodasLasTiendas() {
-        return ResponseEntity.ok(tiendaService.obtenerTodasLasTiendas()); // Hay que cambiar la respuesta entregada
-    }                                                                     // cuando este vacio, debe decir NoContent (pendiente)
+        try {
+            List<Tienda> tiendas = tiendaService.obtenerTodasLasTiendas();
+            if (tiendas.isEmpty()) {
+                return ResponseEntity.noContent().build(); // Retorna 204 No Content si no hay tiendas
+            }
+            return ResponseEntity.ok(tiendas); // Retorna 200 OK con la lista de tiendas
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build(); // Retorna 500 Internal Server Error si ocurre un error
+        }
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Tienda> obtenerTiendaPorId(@PathVariable Long id) {
         try {
@@ -36,13 +44,22 @@ public class TiendaController {
 
     @PostMapping
     public ResponseEntity<Tienda> crearTienda(@RequestBody Tienda tienda) {
-        return ResponseEntity.ok(tiendaService.guardarTienda(tienda)); // Que genere un status CREATED().body(tienda) (pendiente)
+        try {
+            Tienda nuevaTienda = tiendaService.guardarTienda(tienda);
+            return ResponseEntity.status(201).body(nuevaTienda); // Retorna 201 Created con la tienda creada
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build(); // Retorna 400 Bad Request si hay un error
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarTienda(@PathVariable Long id) {
-        tiendaService.eliminarTienda(id);
-        return ResponseEntity.noContent().build();
+        try {
+            tiendaService.eliminarTienda(id);
+            return ResponseEntity.noContent().build(); // Retorna 204 No Content si se elimina correctamente
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build(); // Retorna 404 Not Found si no se encuentra la tienda
+        }
     }
 
 }

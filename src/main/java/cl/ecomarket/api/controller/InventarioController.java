@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import cl.ecomarket.api.model.Inventario;
-import cl.ecomarket.api.model.Producto;
-import cl.ecomarket.api.model.Tienda;
+import cl.ecomarket.api.model.ProductoInventariado;
 import cl.ecomarket.api.services.InventarioService;
-import cl.ecomarket.api.services.ProductoService;
-import cl.ecomarket.api.services.TiendaService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/v1/inventario")
@@ -20,11 +20,8 @@ public class InventarioController {
 
     @Autowired
     private InventarioService inventarioService;
-    @Autowired
-    private ProductoService productoService;
-    @Autowired
-    private TiendaService tiendaService;
 
+    
     @GetMapping("/tiendas")
     public ResponseEntity<List<Inventario>> listarTodos(){
         List<Inventario> inventarios = inventarioService.listarTodos();
@@ -35,51 +32,33 @@ public class InventarioController {
     }
 
     @GetMapping("/tienda/{TiendaId}")
-    public ResponseEntity<List<Inventario>> listarPorIdTienda(@PathVariable Long TiendaId) {
-        List<Inventario> inventario = inventarioService.listarInventarioPorTiendaId(TiendaId); // Agregar un error notFound cuando se ingrese una id de tienda que no este en el repositorio (pendiente)
-        if (inventario.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(inventario);
+    public ResponseEntity<List<ProductoInventariado>> listarPorIdTienda(@PathVariable Long TiendaId) {
+        try {
+            Inventario inventario = inventarioService.encontrarPorTienda(TiendaId);
+            return ResponseEntity.ok(inventario.getProductosInventariados()); // Retorna los productos del inventario de la tienda
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build(); // Si no se encuentra el inventario, retorna notFound
+        }   
     }
 
     @PostMapping
-    public ResponseEntity<Inventario> guardarInventario(@RequestBody Inventario inventario) { // Hay que hacer que arroje un error cuando el id producto
-        Producto producto = productoService.obtenerPorId(inventario.getProducto().getId());   // no existe en la tabla Productos (notFound)
-        Tienda tienda = tiendaService.obtenerTiendaPorId(inventario.getTienda().getId());     // Lo mismo para la tienda (notFound)  (pendiente)
-        inventario.setProducto(producto);
-        inventario.setTienda(tienda);
-/*         if (inventario.getStock()==null){
-            inventario.setStock(0);
-        } */
-        Inventario nuevoInventario = inventarioService.guardarInventario(inventario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoInventario);
+    public ResponseEntity<Inventario> guardarInventario(@RequestBody Inventario inventario) {
+        try {
+            Inventario nuevoInventario = inventarioService.crearInventario(inventario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoInventario); // Retorna un estado CREATED con el inventario creado           
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Si hay un error, retorna un estado BAD_REQUEST
+        }
     }
-
     
     @PatchMapping
-    public ResponseEntity<Inventario> actualizarStock(@RequestParam Long inventarioId,@RequestParam String operacion, @RequestParam int stock){ // operacion = ["agregar","quitar"]
+    public ResponseEntity<Inventario> actualizarStock(@RequestParam Long tiendaId,@RequestParam Long productoId,@RequestParam String operacion, @RequestParam int stock){ // operacion = ["agregar","quitar"]
         try {
-            Inventario inv = inventarioService.encontrarPorId(inventarioId);
-            if (operacion.equals("agregar")){
-                inv.setStock(inv.getStock()+stock);  // Se obtiene el stock actual, y se le suma el stock del @ReqquestParam
-                inventarioService.guardarInventario(inv); // Se actualiza el stock en su repository
-                return ResponseEntity.ok(inv);
-            } else if (operacion.equals("quitar")) {
-                if (inv.getStock() >= stock) {
-                    inv.setStock(inv.getStock()-stock); //Si el stock actual es inferior al stock que se quitara, dara un error
-                    inventarioService.guardarInventario(inv); //Si se cumple bien la condicion, se le resta el stock solicitado al actual y luego se actualiza su repositorio
-                    return ResponseEntity.ok(inv);
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST) // Bad Request si el valor que restara al stock lo excede.
-                            .body(null);
-                }                
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Bad Request si el parametro de operacion no es agregar/quitar.
-            }             
+            Inventario inventario = inventarioService.actualizarStock(tiendaId, productoId, stock, operacion);
+            return ResponseEntity.ok(inventario); // Retorna un ok con el inventario actualizado
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Cambiar este error por un notFound   (pendiente)
-        }            
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Si hay un error, retorna un estado BAD_REQUEST
+        }
     }
 
     @DeleteMapping("/eliminar/{id}")

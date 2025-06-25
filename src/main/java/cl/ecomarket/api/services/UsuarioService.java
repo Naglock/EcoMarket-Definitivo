@@ -19,15 +19,31 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario encontrarPorId(Long id) {
+    public Usuario encontrarPorId(Long id) throws Exception {
+        if (!usuarioRepository.existsById(id)) {
+            throw new Exception("Usuario no encontrado");
+        }
         return usuarioRepository.findById(id).get();
     }
 
-    public Usuario guardarUsuario(Usuario usuario) {
+    public Usuario guardarUsuario(Usuario usuario) throws Exception {
+        if (usuario.getPnombre() == null || usuario.getPnombre().isEmpty()) {
+            throw new Exception("El primer nombre del usuario no puede estar vacío");
+        }
+        if (usuario.getAppaterno() == null || usuario.getAppaterno().isEmpty()) {
+            throw new Exception("El apellido paterno del usuario no puede estar vacío");
+        }
+        if (usuario.getDireccion() == null || usuario.getDireccion().isEmpty()) {
+            throw new Exception("La dirección del usuario no puede estar vacía");
+        }
         return usuarioRepository.save(usuario);
     }
+    
     // Borra al usuario por ID
-    public void borrarUsuario(Long id) {
+    public void borrarUsuario(Long id) throws Exception {
+        if (!usuarioRepository.existsById(id)) {    
+            throw new Exception("Usuario no encontrado");
+        }
         usuarioRepository.deleteById(id);
     }
 

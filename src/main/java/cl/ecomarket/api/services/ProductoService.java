@@ -23,13 +23,27 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public Producto obtenerPorId(Long id) {
+    public Producto obtenerPorId(Long id) throws Exception {
+        if (!productoRepository.existsById(id)) {
+            throw new Exception("Producto no encontrado");
+        }
         return productoRepository.findById(id).get();
     }
 
-    public void eliminarProducto(Long id) {
+    public void eliminarProducto(Long id) throws Exception {
+        if (!productoRepository.existsById(id)) {
+            throw new Exception("Producto no encontrado");
+        }
         productoRepository.deleteById(id);
     }
 
+    public Producto actualizarPrecio (double precio, Long productoId) throws Exception {
+        Producto producto = productoRepository.findById(productoId).orElseThrow(() -> new Exception("Producto no encontrado"));
+        if (precio <= 0) {
+            throw new Exception("El precio debe ser mayor a cero");
+        }
+        producto.setPrecio(precio);
+        return productoRepository.save(producto);
+    }   
 
 }

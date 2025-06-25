@@ -19,7 +19,10 @@ public class TiendaService {
         return tiendaRepository.findAll();
     }
 
-    public Tienda obtenerTiendaPorId(Long id) {
+    public Tienda obtenerTiendaPorId(Long id) throws Exception {
+        if (!tiendaRepository.existsById(id)) {
+            throw new Exception("Tienda no encontrada");
+        }
         return tiendaRepository.findById(id).get();
     }
 
@@ -27,7 +30,10 @@ public class TiendaService {
         return tiendaRepository.save(tienda);
     }
 
-    public void eliminarTienda(Long id) {
+    public void eliminarTienda(Long id) throws Exception {
+        if (!tiendaRepository.existsById(id)) {
+            throw new Exception("Tienda no encontrada");
+        }
         tiendaRepository.deleteById(id);
     }
 
