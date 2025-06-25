@@ -11,7 +11,6 @@ public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer stock;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "producto_inventariado_id")
     private List<ProductoInventariado> productosInventariados;
