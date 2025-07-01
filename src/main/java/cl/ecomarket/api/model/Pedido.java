@@ -1,5 +1,6 @@
 package cl.ecomarket.api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -22,8 +23,8 @@ public class Pedido {
     private Usuario cliente;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "pedido_id")
-    private List<ItemPedido> items;
-    @OneToOne // Relacion uno a uno con Tienda (corregido).
+    private List<ItemPedido> items = new ArrayList<>();
+    @ManyToOne // Relacion muchos a uno con Tienda (corregido).
     @JoinColumn(name="tienda_id")
     private Tienda tienda;
 

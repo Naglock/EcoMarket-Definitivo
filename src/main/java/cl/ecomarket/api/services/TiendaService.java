@@ -36,10 +36,4 @@ public class TiendaService {
         }
         tiendaRepository.deleteById(id);
     }
-
-/*     public List<Tienda> buscarPorDiaSemana(String diaSemana) {
-        return tiendaRepository.findAll().stream()
-                .filter(tienda -> tienda.getDiaSemana().equalsIgnoreCase(diaSemana))
-                .toList();
-    } */
 }
