@@ -100,4 +100,16 @@ public class PedidoService {
         // buscar los pedidos por el ID del cliente
         return pedidoRepository.findByClienteId(ClienteId);
     }
+
+    public Pedido aprobarPedido(Long id) throws Exception {
+        // Verificar si el pedido existe
+        Pedido pedido = encontrarPorId(id);
+        if (pedido == null) {
+            throw new Exception("Pedido no encontrado");
+        }
+        // Cambiar el estado del pedido a APROBADO
+        pedido.setEstado(Estados.APROBADA);
+        // Guardar el pedido actualizado en la base de datos
+        return pedidoRepository.save(pedido);
+    }
 }

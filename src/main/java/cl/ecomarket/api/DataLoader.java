@@ -93,7 +93,8 @@ public class DataLoader implements CommandLineRunner {
                 itemPedido.setProducto(productoRepository.findById(productoId).orElse(null));
                 itemPedido.setCantidad(random.nextInt(5) + 1);
                 pedido.getItems().add(itemPedido);
-            }   
+            }
+            pedido.setEstado(Estados.PENDIENTE); // Estado inicial del pedido   
             pedidoRepository.save(pedido);
         }
 

@@ -83,6 +83,7 @@ public class VentaService {
             total += subtotal;
         }
         venta.setTotal(total);
+        pedidoService.aprobarPedido(venta.getPedido().getId()); // Aprobar el pedido antes de generar la venta
         // Guardar la venta en la base de datos
         return ventaRepository.save(venta);
     }
