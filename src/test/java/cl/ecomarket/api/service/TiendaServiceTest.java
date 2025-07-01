@@ -27,7 +27,7 @@ public class TiendaServiceTest {
     private TiendaService tiendaService;
 
     @Test
-    void testObtenerTodasLasTiendas() {
+    void testObtenerTodasLasTiendas() throws Exception {
         Tienda t1 = new Tienda();
         Tienda t2 = new Tienda();
         when(tiendaRepository.findAll()).thenReturn(Arrays.asList(t1, t2));

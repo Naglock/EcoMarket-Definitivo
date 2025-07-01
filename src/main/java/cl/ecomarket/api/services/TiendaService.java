@@ -20,7 +20,7 @@ public class TiendaService {
         if (tiendas.isEmpty()) {
             throw new Exception("No existe ninguna tienda registrada");
         }
-        return tiendaRepository.findAll();
+        return tiendas;
     }
 
     public Tienda obtenerTiendaPorId(Long id) throws Exception {
