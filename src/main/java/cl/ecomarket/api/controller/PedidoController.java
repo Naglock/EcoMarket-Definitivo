@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.*;
 import cl.ecomarket.api.model.Estados;
 import cl.ecomarket.api.model.Pedido;
 import cl.ecomarket.api.services.PedidoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/v1/pedidos")
+@Tag(name = "Pedidos", description = "Operaciones relacionadas con los pedidos")
 public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
 
     @GetMapping
+    @Operation(summary = "Listar todos los pedidos", description = "Obtiene una lista de todos los pedidos registrados")
     public ResponseEntity<List<Pedido>> listarTodo(){
         List<Pedido> pedidos = pedidoService.obtenerTodos();
         if (pedidos.isEmpty()){
@@ -26,6 +31,7 @@ public class PedidoController {
     }
 
     @GetMapping("/{idPedido}")
+    @Operation(summary = "Obtener pedido por ID", description = "Retorna un pedido específico por su ID")
     public ResponseEntity<Pedido> obtenerPorId(@PathVariable Long idPedido) {
         try {
             Pedido pedido = pedidoService.encontrarPorId(idPedido);
@@ -36,6 +42,7 @@ public class PedidoController {
     }
 
     @GetMapping("/cliente/{idCliente}")
+    @Operation(summary = "Obtener pedidos por ID de cliente", description = "Retorna una lista de pedidos asociados a un cliente específico")
     public ResponseEntity<List<Pedido>> obtenerPorIdCliente(@PathVariable Long idCliente){
         try {
             List<Pedido> pedidos = pedidoService.obtenerPorClienteId(idCliente);
@@ -46,6 +53,7 @@ public class PedidoController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear un nuevo pedido", description = "Crea un nuevo pedido en el sistema")
     public ResponseEntity<Pedido> guardarPedido(@RequestBody Pedido pedido) {
         try {
             Pedido nuevoPedido = pedidoService.crearPedido(pedido);
@@ -56,7 +64,8 @@ public class PedidoController {
     }
 
 
-    @PatchMapping("/cambiar-estado/{idPedido}") 
+    @PatchMapping("/cambiar-estado/{idPedido}")
+    @Operation(summary = "Cambiar estado del pedido", description = "Permite a Logística cambiar el estado de un pedido")
     public ResponseEntity<Pedido> cambiarEstado(@PathVariable Long idPedido, @RequestParam Estados estado) { // Funcion para Logistica. Permite Cambiar el estado del pedido
         try {
             Pedido pedido = pedidoService.encontrarPorId(idPedido);

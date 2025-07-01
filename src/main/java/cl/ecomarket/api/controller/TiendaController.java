@@ -10,17 +10,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import cl.ecomarket.api.model.Tienda;
 import cl.ecomarket.api.services.TiendaService;
 @RestController
 @RequestMapping("/api/v1/tiendas")
+@Tag(name = "Tiendas", description = "Operaciones relacionadas con las tiendas")
 public class TiendaController {
 
     @Autowired
     private TiendaService tiendaService;
 
     @GetMapping
+    @Operation(summary = "Obtener todas las tiendas", description = "Retorna una lista de todas las tiendas disponibles")
     public ResponseEntity<List<Tienda>> obtenerTodasLasTiendas() {
         try {
             List<Tienda> tiendas = tiendaService.obtenerTodasLasTiendas();
@@ -33,9 +37,10 @@ public class TiendaController {
         }
     }
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener tienda por ID", description = "Retorna una tienda específica por su ID")
     public ResponseEntity<Tienda> obtenerTiendaPorId(@PathVariable Long id) {
         try {
-            Tienda tienda = tiendaService.obtenerTiendaPorId(id); 
+            Tienda tienda = tiendaService.obtenerTiendaPorId(id);
             return ResponseEntity.ok(tienda);
         } catch(Exception e) {
             return ResponseEntity.notFound().build();
@@ -43,6 +48,7 @@ public class TiendaController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear una nueva tienda", description = "Crea una nueva tienda en el sistema")
     public ResponseEntity<Tienda> crearTienda(@RequestBody Tienda tienda) {
         try {
             Tienda nuevaTienda = tiendaService.guardarTienda(tienda);
@@ -53,6 +59,7 @@ public class TiendaController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar tienda por ID", description = "Elimina una tienda específica por su ID")
     public ResponseEntity<Void> eliminarTienda(@PathVariable Long id) {
         try {
             tiendaService.eliminarTienda(id);
