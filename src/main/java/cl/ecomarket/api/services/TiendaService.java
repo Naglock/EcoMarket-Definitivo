@@ -1,6 +1,6 @@
 package cl.ecomarket.api.services;
 
-import java.util.List;  
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,11 @@ public class TiendaService {
     @Autowired
     private TiendaRepository tiendaRepository;
 
-    public List<Tienda> obtenerTodasLasTiendas() {
+    public List<Tienda> obtenerTodasLasTiendas() throws Exception {
+        List<Tienda> tiendas = tiendaRepository.findAll();
+        if (tiendas.isEmpty()) {
+            throw new Exception("No existe ninguna tienda registrada");
+        }
         return tiendaRepository.findAll();
     }
 
