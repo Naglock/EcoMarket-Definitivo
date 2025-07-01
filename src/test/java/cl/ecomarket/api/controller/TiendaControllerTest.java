@@ -101,7 +101,7 @@ public class TiendaControllerTest {
     @Test
     void testCrearTienda_BadRequest() throws Exception {
         Tienda tienda = new Tienda();
-        tienda.setNombre("Tienda Nueva");
+        tienda.setId(1L); // Simulando un ID ya existente
 
         when(tiendaService.guardarTienda(any(Tienda.class))).thenThrow(new Exception("Error"));
 

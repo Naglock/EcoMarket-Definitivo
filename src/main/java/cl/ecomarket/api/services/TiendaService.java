@@ -30,7 +30,10 @@ public class TiendaService {
         return tiendaRepository.findById(id).get();
     }
 
-    public Tienda guardarTienda(Tienda tienda) {
+    public Tienda guardarTienda(Tienda tienda) throws Exception {
+        if (tienda.getId() != null && tiendaRepository.existsById(tienda.getId())) {
+            throw new Exception("Ya existe una tienda con ese ID");
+        }
         return tiendaRepository.save(tienda);
     }
 

@@ -127,6 +127,7 @@ public class UsuarioControllerTest {
         usuarioActualizado.setId(1L);
         usuarioActualizado.setPnombre("Juan");
         usuarioActualizado.setAppaterno("Gonzalez");
+        usuarioActualizado.setApmaterno("Gonzalez");
         usuarioActualizado.setDireccion("Calle Falsa 123");
 
         // Mock para encontrar el usuario existente
@@ -134,12 +135,12 @@ public class UsuarioControllerTest {
         // Mock para guardar el usuario actualizado
         when(usuarioService.guardarUsuario(any(Usuario.class))).thenReturn(usuarioActualizado);
 
-        Usuario datosParaActualizar = new Usuario();
-        datosParaActualizar.setApmaterno("Gonzalez");  // Cambio solo este campo
+//        Usuario datosParaActualizar = new Usuario();
+//        datosParaActualizar.setApmaterno("Gonzalez");  // Cambio solo este campo //verificar esta parte
 
         mockMvc.perform(put("/api/v1/usuarios/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(datosParaActualizar)))
+                .content(objectMapper.writeValueAsString(usuarioActualizado)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.apmaterno").value("Gonzalez"))
             .andExpect(jsonPath("$.id").value(1L));

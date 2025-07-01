@@ -60,7 +60,7 @@ public class TiendaServiceTest {
     }
 
     @Test
-    void testGuardarTienda() {
+    void testGuardarTienda() throws Exception {
         Tienda tienda = new Tienda();
         tienda.setNombre("Tienda ABC");
 
