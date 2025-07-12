@@ -14,7 +14,7 @@ import cl.ecomarket.api.services.VentaService;
 import net.datafaker.Faker;
 import cl.ecomarket.api.model.*;
 
-@Profile("dev")
+@Profile("devasd")
 @Component 
 public class DataLoader implements CommandLineRunner {
     

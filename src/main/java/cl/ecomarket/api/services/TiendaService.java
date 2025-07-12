@@ -15,12 +15,8 @@ public class TiendaService {
     @Autowired
     private TiendaRepository tiendaRepository;
 
-    public List<Tienda> obtenerTodasLasTiendas() throws Exception {
-        List<Tienda> tiendas = tiendaRepository.findAll();
-        if (tiendas.isEmpty()) {
-            throw new Exception("No existe ninguna tienda registrada");
-        }
-        return tiendas;
+    public List<Tienda> obtenerTodasLasTiendas(){
+        return tiendaRepository.findAll();
     }
 
     public Tienda obtenerTiendaPorId(Long id) throws Exception {
